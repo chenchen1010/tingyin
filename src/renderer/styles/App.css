@@ -1,0 +1,723 @@
+.app {
+  padding: 20px;
+  min-height: 100vh;
+  background: #ffffff;
+  color: #000000;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.uploader-container {
+  margin: 20px 0;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.uploader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.dropzone {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dropzone:hover {
+  border-color: #007AFF;
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+.dropzone.active {
+  border-color: #007AFF;
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+.dropzone.processing {
+  border-color: #FFB800;
+  background-color: rgba(255, 184, 0, 0.1);
+  cursor: not-allowed;
+}
+
+.dropzone button {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropzone button:hover {
+  background-color: #0051D5;
+}
+
+.error-message {
+  color: #FF3B30;
+  text-align: center;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(255, 59, 48, 0.1);
+  border-radius: 4px;
+}
+
+.progress-container {
+  margin: 20px 0;
+  background: #f5f5f5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 4px;
+  background: #007AFF;
+  transition: width 0.3s ease;
+}
+
+.transcription-viewer {
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.transcription-viewer h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+.transcription-viewer textarea {
+  min-height: 300px;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.transcription-viewer textarea:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.log-viewer {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.log-viewer h3 {
+  margin: 0 0 10px;
+  color: #333;
+  font-size: 16px;
+}
+
+.log-container {
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  scroll-behavior: smooth;
+}
+
+.log-item {
+  padding: 4px 0;
+  font-family: monospace;
+  font-size: 13px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.log-item:last-child {
+  border-bottom: none;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.transcription-viewer .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0;
+}
+
+.transcription-viewer .header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transcription-viewer .export-button {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transcription-viewer .export-button:hover {
+  background-color: #0051D5;
+}
+
+.transcription-viewer .export-button:active {
+  transform: scale(0.98);
+}
+
+.log-control {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch .label {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.slider {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #007AFF;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.toggle-switch .label {
+  color: #333;
+  font-size: 14px;
+}
+
+/* 添加动画效果 */
+.log-viewer {
+  transition: all 0.3s ease;
+}
+
+.log-viewer.hidden {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.audio-player {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.main-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.play-button {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-button:hover {
+  background-color: #0051D5;
+}
+
+.skip-button {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.skip-button:hover {
+  background-color: #e5e5e5;
+}
+
+.time-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.time {
+  font-family: monospace;
+  font-size: 14px;
+  color: #666;
+  min-width: 45px;
+}
+
+.progress-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #ddd;
+  border-radius: 2px;
+  outline: none;
+}
+
+.progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #007AFF;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volume-icon {
+  font-size: 16px;
+  color: #666;
+}
+
+.volume-slider {
+  width: 100px;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #ddd;
+  border-radius: 2px;
+  outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #007AFF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.playback-control {
+  display: flex;
+  align-items: center;
+}
+
+.rate-select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rate-select:hover {
+  border-color: #007AFF;
+}
+
+.rate-select:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.rate-select option {
+  padding: 4px;
+}
+
+.transcription-viewer .control-button {
+  background: none;
+  border: 1px solid #ddd;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 18px;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.transcription-viewer .control-button:hover {
+  background-color: #f5f5f5;
+  color: #007AFF;
+}
+
+.transcription-viewer .control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.transcription-viewer .edit-button {
+  background-color: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transcription-viewer .edit-button:hover {
+  background-color: #e5e5e5;
+}
+
+.transcription-viewer .edit-button.active {
+  background-color: #34C759;
+  color: white;
+  border-color: #34C759;
+}
+
+.transcription-viewer textarea {
+  background-color: #f9f9f9;
+  cursor: default;
+}
+
+.transcription-viewer textarea.editing {
+  background-color: #fff;
+  cursor: text;
+}
+
+/* 添加动画效果 */
+.transcription-viewer .control-button,
+.transcription-viewer .edit-button,
+.transcription-viewer .export-button {
+  transform: scale(1);
+}
+
+.transcription-viewer .control-button:active,
+.transcription-viewer .edit-button:active,
+.transcription-viewer .export-button:active {
+  transform: scale(0.95);
+}
+
+.transcription-viewer .viewer {
+  width: 100%;
+  min-height: 300px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #fff;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+.transcription-viewer .editor {
+  width: 100%;
+  min-height: 300px;
+  padding: 15px;
+  border: 1px solid #007AFF;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.transcription-viewer .editor:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.speaker-settings {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.speaker-settings select {
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+  min-width: 70px;
+}
+
+.speaker-settings select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.speaker-settings select:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+/* 删除之前添加的固定高度 */
+.play-button, .skip-button, .rate-select {
+  height: auto;  /* 恢复为自动高度 */
+}
+
+.text-segment-container {
+  display: inline;
+}
+
+.text-segment {
+  cursor: pointer;
+  padding: 2px 4px;
+  margin: 0;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: inline;
+}
+
+.text-segment.editable {
+  cursor: text;
+  outline: none;
+  border: 1px solid transparent;
+  min-width: 1em;
+}
+
+.text-segment.editable:hover,
+.text-segment.editable:focus {
+  border-color: #007AFF;
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+.text-segment:not(.editable):hover {
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+.speaker-section {
+  margin-bottom: 20px;
+}
+
+.speaker-label {
+  font-weight: 600;
+  color: #007AFF;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.speaker-label time {
+  color: #666;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.speaker-content {
+  line-height: 1.6;
+  margin-left: 16px;
+  white-space: pre-wrap;
+}
+
+.editable-segment,
+.segment-editor {
+  display: none;
+}
+
+/* 移除撤销/重做按钮的样式 */
+.control-button {
+  display: none;
+}
+
+.settings-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.model-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.info-icon {
+  cursor: help;
+  color: #007AFF;
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.info-icon:hover {
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+/* 添加工具提示样式 */
+.info-icon[data-tooltip] {
+  position: relative;
+}
+
+.info-icon[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  right: 0;
+  transform: translateY(8px);
+  padding: 12px 16px;
+  background-color: #333;
+  color: white;
+  font-size: 12px;
+  line-height: 1.6;
+  border-radius: 8px;
+  white-space: pre;
+  width: max-content;
+  max-width: 400px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.info-icon[data-tooltip]:hover::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 6px;
+  transform: translateY(0);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+  margin-top: -6px;
+}
+
+/* 确保上传器和转录结果容器宽度一致 */
+.uploader-container,
+.transcription-viewer,
+.audio-player,
+.progress-container,
+.log-viewer {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 20px 0;
+}
+ 
