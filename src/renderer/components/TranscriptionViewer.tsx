@@ -23,12 +23,14 @@ interface Props {
   content: TranscriptionData;
   onEdit: (text: string) => void;
   onSegmentClick?: (startTime: number) => void;
+  currentTime?: number;
 }
 
 export const TranscriptionViewer: React.FC<Props> = ({ 
   content, 
   onEdit,
-  onSegmentClick 
+  onSegmentClick,
+  currentTime = 0
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingContent, setEditingContent] = useState<TranscriptionData>(content);
@@ -132,6 +134,9 @@ export const TranscriptionViewer: React.FC<Props> = ({
     const selectionRef = React.useRef<{ start: number; end: number } | null>(null);
     const isComposingRef = React.useRef(false);
 
+    // 判断当前段落是否应该高亮
+    const isPlaying = currentTime > 0 && currentTime >= segment.start && currentTime < segment.end;
+
     const saveSelection = () => {
       const selection = window.getSelection();
       const range = selection?.getRangeAt(0);
@@ -175,7 +180,7 @@ export const TranscriptionViewer: React.FC<Props> = ({
         {isEditing ? (
           <span
             ref={editableRef}
-            className="text-segment editable"
+            className={`text-segment editable ${isPlaying ? 'playing' : ''}`}
             contentEditable
             suppressContentEditableWarning
             onCompositionStart={() => {
@@ -234,7 +239,7 @@ export const TranscriptionViewer: React.FC<Props> = ({
           </span>
         ) : (
           <span 
-            className="text-segment"
+            className={`text-segment ${isPlaying ? 'playing' : ''}`}
             onClick={() => handleSegmentClick(segment.start)}
           >
             {segment.text}

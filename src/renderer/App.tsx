@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [showLogs, setShowLogs] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string>('');
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [currentTime, setCurrentTime] = useState(0);
 
   const handleProgressUpdate = (value: number) => {
     setProgress(value);
@@ -55,6 +56,7 @@ const App: React.FC = () => {
           <AudioPlayer 
             audioUrl={audioUrl} 
             ref={audioRef}
+            onTimeUpdate={setCurrentTime}
           />
         )}
         <ProgressBar progress={progress} />
@@ -64,6 +66,7 @@ const App: React.FC = () => {
             content={transcription}
             onEdit={(newContent) => setTranscription(JSON.parse(newContent))}
             onSegmentClick={handleSegmentClick}
+            currentTime={currentTime}
           />
         )}
       </main>

@@ -857,4 +857,17 @@ input:checked + .slider:before {
 }
 
 /* 删除 .speaker-edit input { display: none; } 规则，它会影响所有输入框 */
+
+.text-segment.playing {
+  background-color: rgba(0, 122, 255, 0.1);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+/* 编辑状态下的高亮样式 */
+.text-segment.editable.playing {
+  background-color: rgba(0, 122, 255, 0.05);
+  border-color: #007AFF;
+}
+
  

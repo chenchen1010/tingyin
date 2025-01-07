@@ -2,9 +2,10 @@ import React, { useState, useEffect, forwardRef, ForwardedRef } from 'react';
 
 interface Props {
   audioUrl: string;
+  onTimeUpdate?: (currentTime: number) => void;
 }
 
-export const AudioPlayer = forwardRef<HTMLAudioElement, Props>(({ audioUrl }, ref: ForwardedRef<HTMLAudioElement>) => {
+export const AudioPlayer = forwardRef<HTMLAudioElement, Props>(({ audioUrl, onTimeUpdate }, ref: ForwardedRef<HTMLAudioElement>) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -45,6 +46,7 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, Props>(({ audioUrl }, re
     const audio = getAudioElement();
     if (audio) {
       setCurrentTime(audio.currentTime);
+      onTimeUpdate?.(audio.currentTime);
     }
   };
 
