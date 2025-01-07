@@ -31,7 +31,12 @@ export const TranscriptionViewer: React.FC<Props> = ({
   onSegmentClick 
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editingContent, setEditingContent] = useState<string | TranscriptionData>(content);
+  const [editingContent, setEditingContent] = useState<TranscriptionData>(content);
+  const [editingSpeakerId, setEditingSpeakerId] = useState<string | null>(null);
+  const [originalSpeakerId, setOriginalSpeakerId] = useState<string>('');
+  const [newSpeakerInput, setNewSpeakerInput] = useState('');
+  const [showSpeakerEdit, setShowSpeakerEdit] = useState<number | null>(null);
+  const [modifyAll, setModifyAll] = useState(false);
   const [history, setHistory] = useState<EditHistory[]>([{ content, timestamp: Date.now() }]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -281,16 +286,195 @@ export const TranscriptionViewer: React.FC<Props> = ({
     }
   };
 
+  const renderSpeakerLabel = (speakerId: string, startTime: number, index: number) => {
+    const isEditing = editingSpeakerId === `${speakerId}-${index}` || editingSpeakerId === `new-${index}`;
+    const editableRef = React.useRef<HTMLSpanElement>(null);
+    const selectRef = React.useRef<HTMLSelectElement>(null);
+    
+    if (isEditing) {
+      const existingSpeakers = Array.from(
+        new Set(editingContent.segments.map(s => s.speakerId))
+      );
+
+      const currentValue = editingSpeakerId?.startsWith('new-') ? 'new' : speakerId;
+
+      const modifyAllCheckbox = (
+        <label className="modify-all-checkbox">
+          <input
+            type="checkbox"
+            checked={modifyAll}
+            onChange={(e) => setModifyAll(e.target.checked)}
+          />
+          <span>修改所有"{originalSpeakerId}"</span>
+        </label>
+      );
+
+      if (currentValue === 'new') {
+        return (
+          <div className="speaker-edit">
+            <span
+              ref={editableRef}
+              className="speaker-label-editable empty"
+              contentEditable
+              suppressContentEditableWarning
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const newSpeakerId = e.currentTarget.textContent?.trim();
+                  if (newSpeakerId) {
+                    const newContent = {
+                      ...editingContent,
+                      segments: editingContent.segments.map((segment, i) => 
+                        (i === index || (modifyAll && segment.speakerId === originalSpeakerId))
+                          ? { ...segment, speakerId: newSpeakerId }
+                          : segment
+                      )
+                    };
+                    setEditingContent(newContent);
+                    onEdit(JSON.stringify(newContent));
+                    setEditingSpeakerId(null);
+                  }
+                } else if (e.key === 'Escape') {
+                  setEditingSpeakerId(null);
+                }
+              }}
+              onInput={(e) => {
+                if (e.currentTarget.textContent?.trim()) {
+                  e.currentTarget.classList.remove('empty');
+                } else {
+                  e.currentTarget.classList.add('empty');
+                }
+              }}
+              data-placeholder="新增说话人，按Enter键确认"
+            />
+            <time>[{formatTime(startTime)}]</time>
+            {modifyAllCheckbox}
+          </div>
+        );
+      }
+
+      return (
+        <div className="speaker-edit">
+          <select
+            ref={selectRef}
+            value={currentValue}
+            onChange={(e) => {
+              const newSpeakerId = e.target.value;
+              handleSpeakerChange(index, newSpeakerId, modifyAll, originalSpeakerId);
+              e.currentTarget.size = 0;
+            }}
+            onBlur={(e) => {
+              const target = e.relatedTarget;
+              if (!target || !target.closest('.modify-all-checkbox')) {
+                if (currentValue !== 'new') {
+                  setEditingSpeakerId(null);
+                  selectRef.current!.size = 0;
+                }
+              }
+            }}
+          >
+            <option value="new">+ 新增说话人</option>
+            {existingSpeakers.map(speaker => (
+              <option key={speaker} value={speaker}>{speaker}</option>
+            ))}
+          </select>
+          <time>[{formatTime(startTime)}]</time>
+          {modifyAllCheckbox}
+        </div>
+      );
+    }
+
+    return (
+      <div 
+        className="speaker-label"
+        onMouseEnter={() => setShowSpeakerEdit(index)}
+        onMouseLeave={() => setShowSpeakerEdit(null)}
+      >
+        <span>{speakerId}</span>
+        {showSpeakerEdit === index && (
+          <button
+            className="edit-speaker-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOriginalSpeakerId(editingContent.segments[index].speakerId);
+              setEditingSpeakerId(`${speakerId}-${index}`);
+              setModifyAll(false);
+            }}
+          >
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+              <path d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 00-.064.108l-.558 1.953 1.953-.558a.253.253 0 00.108-.064l6.286-6.286z" />
+            </svg>
+          </button>
+        )}
+        <time>[{formatTime(startTime)}]</time>
+      </div>
+    );
+  };
+
+  const handleSpeakerChange = (
+    index: number, 
+    newSpeakerId: string, 
+    modifyAll: boolean, 
+    currentSpeakerId: string
+  ) => {
+    if (newSpeakerId === 'new') {
+      setNewSpeakerInput('');
+      setOriginalSpeakerId(editingContent.segments[index].speakerId);
+      setEditingSpeakerId(`new-${index}`);
+      
+      const newContent = {
+        ...editingContent,
+        segments: editingContent.segments.map((segment, i) => 
+          i === index ? { ...segment, speakerId: '' } : segment
+        )
+      };
+      setEditingContent(newContent);
+      return;
+    }
+
+    const newContent = {
+      ...editingContent,
+      segments: editingContent.segments.map((segment, i) => 
+        (i === index || (modifyAll && segment.speakerId === originalSpeakerId))
+          ? { ...segment, speakerId: newSpeakerId }
+          : segment
+      )
+    };
+
+    setEditingContent(newContent);
+    onEdit(JSON.stringify(newContent));
+    setEditingSpeakerId(null);
+    setModifyAll(false);
+  };
+
+  const handleNewSpeaker = (index: number) => {
+    if (!newSpeakerInput.trim()) return;
+
+    const newContent = {
+      ...editingContent,
+      segments: editingContent.segments.map((segment, i) => 
+        i === index ? { ...segment, speakerId: newSpeakerInput.trim() } : segment
+      )
+    };
+
+    setEditingContent(newContent);
+    onEdit(JSON.stringify(newContent));
+    setEditingSpeakerId(null);
+    setNewSpeakerInput('');
+  };
+
   const renderContent = () => {
     return (
       <div className="viewer">
-        {content.segments.map((speakerSegment, index) => (
-          <div key={index} className="speaker-section">
-            <div className="speaker-label">
-              {speakerSegment.speakerId} [{formatTime(speakerSegment.startTime)}]
-            </div>
+        {editingContent.segments.map((speakerSegment, index) => (
+          <div key={`speaker-${index}`} className="speaker-section">
+            {renderSpeakerLabel(
+              speakerSegment.speakerId, 
+              speakerSegment.startTime,
+              index
+            )}
             <div className="speaker-content">
-              {speakerSegment.segments.map(segment => 
+              {speakerSegment.segments.map((segment, i) => 
                 renderSegment(segment, speakerSegment.speakerId)
               )}
             </div>
@@ -336,7 +520,7 @@ export const TranscriptionViewer: React.FC<Props> = ({
   const handleExport = async () => {
     try {
       // 将转录内容格式化为纯文本
-      const formattedText = content.segments
+      const formattedText = editingContent.segments
         .map(speaker => 
           `${speaker.speakerId} [${formatTime(speaker.startTime)}]\n${
             speaker.segments.map(seg => seg.text).join('\n')

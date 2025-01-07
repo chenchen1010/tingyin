@@ -614,17 +614,19 @@ input:checked + .slider:before {
 }
 
 .speaker-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-weight: 600;
   color: #007AFF;
   margin-bottom: 8px;
-  display: flex;
-  align-items: center;
 }
 
 .speaker-label time {
   color: #666;
   font-size: 0.9em;
-  margin-left: 8px;
+  margin-left: 4px;
 }
 
 .speaker-content {
@@ -720,4 +722,139 @@ input:checked + .slider:before {
   box-sizing: border-box;
   margin: 20px 0;
 }
+
+.edit-speaker-button {
+  opacity: 0;
+  transition: opacity 0.2s;
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: #007AFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+}
+
+.speaker-label:hover .edit-speaker-button {
+  opacity: 1;
+}
+
+.edit-speaker-button:hover {
+  background-color: rgba(0, 122, 255, 0.1);
+  border-radius: 4px;
+}
+
+.speaker-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  position: relative;
+  flex-wrap: wrap; /* 允许内容换行 */
+}
+
+.speaker-edit select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+/* 添加展开状态的样式 */
+.speaker-edit select[size] {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+.speaker-edit select[size] option {
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.speaker-edit select[size] option:hover {
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+.speaker-edit input[type="text"] {
+  padding: 4px 8px;
+  border: 1px solid #007AFF;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+  outline: none;
+  min-width: 150px;
+  margin-left: 8px;
+}
+
+.speaker-edit input:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.speaker-label-editable {
+  display: inline-block;
+  min-width: 200px;
+  padding: 2px 4px;
+  border: 1px solid #007AFF;
+  border-radius: 4px;
+  outline: none;
+  color: #007AFF;
+  font-weight: 600;
+  background-color: rgba(0, 122, 255, 0.05);
+  position: relative;
+}
+
+/* 修改占位符样式 */
+.speaker-label-editable.empty:before {
+  content: attr(data-placeholder);
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  color: #999;
+  pointer-events: none;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+/* 当有内容时隐藏占位符 */
+.speaker-label-editable:not(:empty):before {
+  display: none;
+}
+
+.speaker-label-editable:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.modify-all-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+}
+
+.modify-all-checkbox input[type="checkbox"] {
+  margin: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.modify-all-checkbox:hover {
+  color: #007AFF;
+}
+
+/* 删除 .speaker-edit input { display: none; } 规则，它会影响所有输入框 */
  
